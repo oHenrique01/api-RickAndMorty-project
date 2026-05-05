@@ -1,42 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="style.css">
-  <title>Rick and Morty</title>
+  <title>Rick and Morty Explorer</title>
 </head>
 
 <body>
   <main class="app-shell">
-    <header class="brand">
-      <div>
-        <span class="brand-badge">Rick & Morty</span>
-        <h1 class="brand-title">Character Lookup</h1>
-        <p class="brand-copy">Busque o ID de um personagem e veja os detalhes em um card estilizado.</p>
+    <section class="hero" aria-labelledby="page-title">
+      <div class="hero-copy">
+        <span class="eyebrow">Rick &amp; Morty API</span>
+        <h1 id="page-title">Explore personagens pelo ID</h1>
+        <p>Digite um numero entre 1 e 826 para consultar imagem, status, especie, localizacao e episodios.</p>
       </div>
-      <div class="hero-visual" aria-hidden="true"></div>
-    </header>
 
-    <form action="" method="get" class="search-panel">
-      <label class="input-wrap" for="characterId">
-        <span>ID do personagem</span>
-        <input type="number" name="characterId" id="characterId" min="1" placeholder="Ex: 1">
-      </label>
-      <button type="submit" id="btn-go">Buscar</button>
-    </form>
+      <form action="" method="get" class="search-panel" aria-label="Buscar personagem">
+        <label class="input-wrap" for="characterId">
+          <span>ID do personagem</span>
+          <input type="number" name="characterId" id="characterId" min="1" max="826" placeholder="Ex: 1">
+        </label>
+        <button type="submit" id="btn-go">Buscar</button>
+      </form>
+    </section>
 
-    <section class="result-section">
+    <section class="result-section" aria-live="polite">
       <div class="result-grid">
-        <div class="preview-card">
-          <img src="" alt="Rick and Morty character" id="img">
+        <div class="preview-card" aria-label="Imagem do personagem">
+          <div class="portal-placeholder" aria-hidden="true">
+            <span></span>
+          </div>
+          <img src="" alt="Personagem de Rick and Morty" id="img">
         </div>
+
         <div id="content" class="content">
           <div class="empty-state">
-            <p>Digite um ID e clique em buscar para abrir o portal do universo Rick and Morty.</p>
-            <strong>ID válido: 1 a 826</strong>
+            <span class="empty-kicker">Pronto para buscar</span>
+            <p>Informe um ID valido para abrir os dados do personagem.</p>
+            <strong>ID valido: 1 a 826</strong>
           </div>
         </div>
       </div>
