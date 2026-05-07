@@ -1,93 +1,72 @@
+import { fetchApi } from "./api/fetchApi.js";
+import { createCard } from "./components/createCard.js";
+import { showFavoriteMessage } from "./components/showFavoriteMessage.js";
+import { removeFavorite, saveFavorite } from "./storage/favoriteStorage.js";
+import { getCharacterData } from "./utils/getCharacterData.js";
+import { validateCharacterId } from "./utils/validateCharacterId.js";
+
 const input = document.getElementById("characterId");
 const content = document.getElementById("content");
 const form = document.querySelector("form");
-const btn = document.getElementById("btn-go");
+const btnSearch = document.getElementById("btn-go");
+const checkFav = document.getElementById("favorite-character");
+const btnFav = document.querySelector(".favorite-button");
+const favoriteMessage = document.getElementById("favorite-message");
 const img = document.getElementById("img");
 
-async function fetchApi(value) {
-  const response = await fetch(`https://rickandmortyapi.com/api/character/${value}`);
-  const data = await response.json();
-
-  if (!response.ok) throw new Error(data.error || "Personagem nao encontrado.");
-
-  return data;
+function hideFavoriteButton() {
+  checkFav.checked = false;
+  checkFav.classList.add("favorite-hidden");
+  btnFav.classList.add("favorite-hidden");
 }
 
-function getCharacterData(character) {
-  return {
-    name: character.name,
-    status: character.status,
-    species: character.species,
-    episodes: character.episode,
-  };
+function showFavoriteButton() {
+  checkFav.classList.remove("favorite-hidden");
+  btnFav.classList.remove("favorite-hidden");
 }
 
-function createCard(character) {
-  const card = document.createElement("article");
-  card.className = "character-card";
-
-  const data = getCharacterData(character);
-
-  const header = document.createElement("div");
-  header.className = "card-header";
-
-  const statusChip = document.createElement("span");
-  statusChip.className = `chip status-${data.status.toLowerCase().replace(/[^a-z]/g, "")}`;
-  statusChip.textContent = data.status;
-
-  const name = document.createElement("h2");
-  name.textContent = data.name;
-
-  const subtitle = document.createElement("p");
-  subtitle.className = "subtitle";
-  subtitle.textContent = `${data.species} - ${character.gender}`;
-
-  header.append(statusChip, name, subtitle);
-
-  const locationDiv = document.createElement("div");
-  locationDiv.className = "location";
-
-  const locationLabel = document.createElement("span");
-  locationLabel.textContent = "Localizacao";
-
-  const locationName = document.createElement("strong");
-  locationName.textContent = character.location.name;
-
-  locationDiv.append(locationLabel, locationName);
-
-  const episodeList = document.createElement("div");
-  episodeList.className = "episode-list";
-
-  const episodeTitle = document.createElement("h3");
-  episodeTitle.textContent = "Episodios";
-
-  const episodeUl = document.createElement("ul");
-
-  data.episodes.slice(0, 10).forEach((episodeUrl) => {
-    const li = document.createElement("li");
-    const episodeNumber = episodeUrl.split("/").pop();
-    li.textContent = `EP ${episodeNumber}`;
-    episodeUl.appendChild(li);
-  });
-
-  episodeList.append(episodeTitle, episodeUl);
-  card.append(header, locationDiv, episodeList);
-
-  return card;
-}
-
+// Exibe uma mensagem de erro no painel de resultado e limpa a imagem atual.
 function showError(message) {
   img.src = "";
   img.alt = "Erro ao carregar imagem";
   img.classList.remove("loaded");
+  hideFavoriteButton();
   content.innerHTML = `<div class="empty-state"><span class="empty-kicker">Ops</span><p>${message}</p></div>`;
 }
+
+checkFav.addEventListener("change", async () => {
+  const val = validateCharacterId(input.value);
+
+  if (!val) {
+    checkFav.checked = false;
+    showFavoriteMessage(favoriteMessage, "Informe um ID valido antes de favoritar.", "warning");
+    input.focus();
+    return;
+  }
+
+  if (checkFav.checked) {
+    try {
+      const character = await fetchApi(val);
+      const characterData = getCharacterData(character);
+
+      saveFavorite(characterData);
+      showFavoriteMessage(favoriteMessage, `${characterData.name} foi salvo nos favoritos.`);
+
+    } catch (error) {
+      checkFav.checked = false;
+      showFavoriteMessage(favoriteMessage, error.message || "Nao foi possivel salvar o favorito.", "warning");
+    }
+  } else {
+    removeFavorite();
+    showFavoriteMessage(favoriteMessage, "Personagem removido dos favoritos.", "removed");
+  }
+});
 
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const val = parseInt(input.value, 10);
-  if (!val || val < 1 || val > 826) {
+  const val = validateCharacterId(input.value);
+  if (!val) {
     showError("Digite um ID valido entre 1 e 826.");
     return;
   }
@@ -96,14 +75,15 @@ form.addEventListener("submit", async (event) => {
   img.classList.remove("loaded");
   img.src = "";
   img.alt = "";
+  hideFavoriteButton();
 
   const loading = document.createElement("p");
   loading.className = "loading";
   loading.textContent = "Buscando personagem...";
   content.appendChild(loading);
 
-  btn.disabled = true;
-  btn.textContent = "Buscando...";
+  btnSearch.disabled = true;
+  btnSearch.textContent = "Buscando...";
 
   try {
     const result = await fetchApi(val);
@@ -115,10 +95,13 @@ form.addEventListener("submit", async (event) => {
     const card = createCard(result);
     loading.remove();
     content.appendChild(card);
+    showFavoriteButton();
+
   } catch (error) {
     showError(error.message || "Erro ao buscar personagem. Verifique o ID e tente novamente.");
+
   } finally {
-    btn.disabled = false;
-    btn.textContent = "Buscar";
+    btnSearch.disabled = false;
+    btnSearch.textContent = "Buscar";
   }
 });

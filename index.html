@@ -36,6 +36,8 @@
             <span></span>
           </div>
           <img src="" alt="Personagem de Rick and Morty" id="img">
+          <input type="checkbox" id="favorite-character" class="favorite-toggle favorite-hidden" aria-label="Favoritar personagem">
+          <label for="favorite-character" class="favorite-button favorite-hidden" title="Favoritar personagem"></label>
         </div>
 
         <div id="content" class="content">
@@ -47,9 +49,11 @@
         </div>
       </div>
     </section>
+
+    <div id="favorite-message" class="favorite-message" role="status" aria-live="polite"></div>
   </main>
 
-  <script src="index.js"></script>
+  <script type="module" src="index.js"></script>
 </body>
 
 </html>
