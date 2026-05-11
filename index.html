@@ -16,13 +16,13 @@
     <section class="hero" aria-labelledby="page-title">
       <div class="hero-copy">
         <span class="eyebrow">Rick &amp; Morty API</span>
-        <h1 id="page-title">Explore personagens pelo ID</h1>
-        <p>Digite um numero entre 1 e 826 para consultar imagem, status, especie, localizacao e episodios.</p>
+        <h1 id="page-title">Explore personagens</h1>
+        <p>Digite um ID entre 1 e 826</p>
       </div>
 
       <form action="" method="get" class="search-panel" aria-label="Buscar personagem">
         <label class="input-wrap" for="characterId">
-          <span>ID do personagem</span>
+          <span>ID</span>
           <input type="number" name="characterId" id="characterId" min="1" max="826" placeholder="Ex: 1">
         </label>
         <button type="submit" id="btn-go">Buscar</button>
@@ -31,20 +31,105 @@
 
     <section class="result-section" aria-live="polite">
       <div class="result-grid">
-        <div class="preview-card" aria-label="Imagem do personagem">
-          <div class="portal-placeholder" aria-hidden="true">
-            <span></span>
+        <!-- Header Card com Imagem -->
+        <div class="character-header-card">
+          <div class="preview-card" aria-label="Imagem do personagem">
+            <div class="portal-placeholder" aria-hidden="true">
+              <span></span>
+            </div>
+            <img src="" alt="Personagem de Rick and Morty" id="img">
+            <input type="checkbox" id="favorite-character" class="favorite-toggle favorite-hidden" aria-label="Favoritar personagem">
+            <label for="favorite-character" class="favorite-button favorite-hidden" title="Favoritar personagem"></label>
           </div>
-          <img src="" alt="Personagem de Rick and Morty" id="img">
-          <input type="checkbox" id="favorite-character" class="favorite-toggle favorite-hidden" aria-label="Favoritar personagem">
-          <label for="favorite-character" class="favorite-button favorite-hidden" title="Favoritar personagem"></label>
+          
+          <div class="character-title-card">
+            <h2 id="character-name">Busque um personagem</h2>
+            <p id="character-species" class="character-subtitle"></p>
+          </div>
         </div>
 
+        <!-- Tabs Navigation -->
         <div id="content" class="content">
-          <div class="empty-state">
-            <span class="empty-kicker">Pronto para buscar</span>
-            <p>Informe um ID valido para abrir os dados do personagem.</p>
-            <strong>ID valido: 1 a 826</strong>
+          <div class="tabs-container">
+            <div class="tabs-nav">
+              <button class="tab-btn active" data-tab="profile">Perfil</button>
+              <button class="tab-btn" data-tab="episodes">Episódios</button>
+              <button class="tab-btn" data-tab="details">Detalhes</button>
+            </div>
+
+            <!-- Tab: Perfil -->
+            <div class="tab-content active" id="profile-tab">
+              <div class="empty-state">
+                <span class="empty-kicker">Vamos começar</span>
+                <p>Digite um ID acima e carregue os dados do personagem.</p>
+                <strong>ID válido: 1 a 826</strong>
+              </div>
+              
+              <div class="profile-content hidden-init">
+                <div class="info-section">
+                  <div class="info-item">
+                    <span class="info-label">Status</span>
+                    <span id="profile-status" class="info-value"></span>
+                  </div>
+                  <div class="info-item">
+                    <span class="info-label">Tipo</span>
+                    <span id="profile-type" class="info-value"></span>
+                  </div>
+                </div>
+
+                <div class="info-card">
+                  <h3>Localização</h3>
+                  <p id="profile-location" class="info-text"></p>
+                </div>
+
+                <div class="info-card">
+                  <h3>Origem</h3>
+                  <p id="profile-origin" class="info-text"></p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tab: Episódios -->
+            <div class="tab-content" id="episodes-tab">
+              <div class="empty-state">
+                <span class="empty-kicker">Nenhum episódio</span>
+                <p>Carregue um personagem para ver os episódios.</p>
+              </div>
+
+              <div class="episodes-content hidden-init">
+                <h3>Aparições em Episódios</h3>
+                <ul class="episodes-list" id="episodes-list"></ul>
+              </div>
+            </div>
+
+            <!-- Tab: Detalhes -->
+            <div class="tab-content" id="details-tab">
+              <div class="empty-state">
+                <span class="empty-kicker">Sem detalhes</span>
+                <p>Carregue um personagem para ver mais informações.</p>
+              </div>
+
+              <div class="details-content hidden-init">
+                <div class="detail-grid">
+                  <div class="detail-item">
+                    <span class="detail-label">Gênero</span>
+                    <span id="detail-gender" class="detail-value"></span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Espécie</span>
+                    <span id="detail-species" class="detail-value"></span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Total de Episódios</span>
+                    <span id="detail-episodes" class="detail-value"></span>
+                  </div>
+                  <div class="detail-item">
+                    <span class="detail-label">Criado em</span>
+                    <span id="detail-created" class="detail-value"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
