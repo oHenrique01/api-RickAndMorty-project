@@ -1,8 +1,10 @@
 import { fetchApi } from "./api/fetchApi.js";
+import { fetchNameApi } from "./api/fetchNameApi.js"
 import { showFavoriteMessage } from "./components/showFavoriteMessage.js";
 import { removeFavorite, saveFavorite } from "./storage/favoriteStorage.js";
 import { getCharacterData } from "./utils/getCharacterData.js";
 import { validateCharacterId } from "./utils/validateCharacterId.js";
+import { validateCharacterName } from "./utils/validateCharacterName.js";
 
 const input = document.getElementById("characterId");
 const form = document.querySelector("form");
@@ -146,9 +148,11 @@ checkFav.addEventListener("change", async () => {
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
 
-  const val = validateCharacterId(input.value);
-  if (!val) {
-    showError("Digite um ID valido entre 1 e 826.");
+  const valName = validateCharacterName(input.value)
+  const valId = validateCharacterId(input.value);
+
+  if (!valName && !valId) {
+    showError("Digite um nome válido ou um ID entre 1 e 826.");
     return;
   }
 
@@ -162,7 +166,13 @@ form.addEventListener("submit", async (event) => {
   btnSearch.textContent = "Buscando...";
 
   try {
-    const result = await fetchApi(val);
+    let result = valId ? await fetchApi(valId) : await fetchNameApi(valName);
+    
+    // Se buscar por nome, extrai o primeiro resultado
+    if (valName && result.results) {
+      result = result.results[0];
+    }
+    
     const data = getCharacterData(result);
 
     // Update header

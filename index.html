@@ -17,13 +17,13 @@
       <div class="hero-copy">
         <span class="eyebrow">Rick &amp; Morty API</span>
         <h1 id="page-title">Explore personagens</h1>
-        <p>Digite um ID entre 1 e 826</p>
+        <p>Digite um ID (1-826) ou o nome de um personagem</p>
       </div>
 
       <form action="" method="get" class="search-panel" aria-label="Buscar personagem">
         <label class="input-wrap" for="characterId">
-          <span>ID</span>
-          <input type="number" name="characterId" id="characterId" min="1" max="826" placeholder="Ex: 1">
+          <span>Buscar</span>
+          <input type="text" name="characterId" id="characterId" placeholder="Ex: 1 ou Rick">
         </label>
         <button type="submit" id="btn-go">Buscar</button>
       </form>

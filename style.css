@@ -258,7 +258,7 @@ h1 {
 }
 
 .character-title-card h2 {
-  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-size: clamp(1.3rem, 4vw, 1.85rem);
   line-height: 1.1;
   font-weight: 800;
   margin: 0;
@@ -266,7 +266,7 @@ h1 {
 
 .character-subtitle {
   color: var(--muted);
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   margin: 0;
 }
 
@@ -278,6 +278,7 @@ h1 {
   overflow: hidden;
   border: 1px solid var(--border);
   background: rgba(3, 10, 20, 0.4);
+  margin-top: 14px;
 }
 
 .tabs-nav {
@@ -330,6 +331,7 @@ h1 {
   animation: fadeUp 300ms ease both;
   background: rgba(3, 10, 20, 0.45);
   border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  gap: 18px;
 }
 
 .tab-content.active {
@@ -1168,9 +1170,9 @@ h1 {
 
   .preview-card {
     width: 100%;
-    max-width: 360px;
+    max-width: 300px;
     margin-inline: auto;
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 4 / 5;
   }
 
   .preview-card img {
@@ -1187,7 +1189,7 @@ h1 {
   }
 
   .character-title-card h2 {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
   }
 
   .tabs-nav {
