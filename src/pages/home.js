@@ -14,13 +14,14 @@ import { validateCharacterId } from "../utils/validateCharacterId.js";
 import { validateCharacterName } from "../utils/validateCharacterName.js";
 
 export function initHomePage() {
-  const input = document.getElementById("characterId");
-  const form = document.querySelector("form");
-  const btnSearch = document.getElementById("btn-go");
-  const checkFav = document.getElementById("favorite-character");
+  const searchInput = document.getElementById("characterId");
+  const searchForm = document.querySelector("form");
+  const searchButton = document.getElementById("btn-go");
+  const favoriteCheckbox = document.getElementById("favorite-character");
   const favoriteMessage = document.getElementById("favorite-message");
-  const img = document.getElementById("img");
+  const characterImage = document.getElementById("img");
   const tabButtons = document.querySelectorAll(".tab-btn");
+  let currentCharacterData = null;
 
   setupAutocomplete();
 
@@ -30,25 +31,30 @@ export function initHomePage() {
     });
   });
 
-  checkFav.addEventListener("change", async () => {
-    const val = validateCharacterId(input.value);
+  searchInput.addEventListener("input", () => {
+    currentCharacterData = null;
+    favoriteCheckbox.checked = false;
+    hideFavoriteButton();
+  });
 
-    if (!val) {
-      checkFav.checked = false;
-      showFavoriteMessage(favoriteMessage, "Informe um ID valido antes de favoritar.", "warning");
-      input.focus();
+  favoriteCheckbox.addEventListener("change", async () => {
+    const characterId = validateCharacterId(searchInput.value);
+
+    if (!characterId && !currentCharacterData) {
+      favoriteCheckbox.checked = false;
+      showFavoriteMessage(favoriteMessage, "Busque um personagem antes de favoritar.", "warning");
+      searchInput.focus();
       return;
     }
 
-    if (checkFav.checked) {
+    if (favoriteCheckbox.checked) {
       try {
-        const character = await fetchApi(val);
-        const characterData = getCharacterData(character);
+        const characterData = currentCharacterData || getCharacterData(await fetchApi(characterId));
 
         saveFavorite(characterData);
         showFavoriteMessage(favoriteMessage, `${characterData.name} foi salvo nos favoritos.`);
       } catch (error) {
-        checkFav.checked = false;
+        favoriteCheckbox.checked = false;
         showFavoriteMessage(favoriteMessage, error.message || "Nao foi possivel salvar o favorito.", "warning");
       }
 
@@ -59,44 +65,46 @@ export function initHomePage() {
     showFavoriteMessage(favoriteMessage, "Personagem removido dos favoritos.", "removed");
   });
 
-  form.addEventListener("submit", async (event) => {
+  searchForm.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    const valName = validateCharacterName(input.value);
-    const valId = validateCharacterId(input.value);
+    const characterName = validateCharacterName(searchInput.value);
+    const characterId = validateCharacterId(searchInput.value);
 
-    if (!valName && !valId) {
+    if (!characterName && !characterId) {
       showError("Digite um nome valido ou um ID entre 1 e 826.");
       return;
     }
 
+    currentCharacterData = null;
+    favoriteCheckbox.checked = false;
     resetTabs();
-    img.classList.remove("loaded");
-    img.src = "";
-    img.alt = "";
+    characterImage.classList.remove("loaded");
+    characterImage.src = "";
+    characterImage.alt = "";
     hideFavoriteButton();
 
-    btnSearch.disabled = true;
-    btnSearch.textContent = "Buscando...";
+    searchButton.disabled = true;
+    searchButton.textContent = "Buscando...";
 
     try {
-      let result = valId ? await fetchApi(valId) : await fetchNameApi(valName);
+      let characterResponse = characterId ? await fetchApi(characterId) : await fetchNameApi(characterName);
 
-      if (valName && result.results) {
-        result = result.results[0];
+      if (characterName && characterResponse.results) {
+        characterResponse = characterResponse.results[0];
       }
 
-      const data = getCharacterData(result);
+      currentCharacterData = getCharacterData(characterResponse);
 
-      renderCharacter(result);
-      populateTabs(result, data);
+      renderCharacter(characterResponse);
+      populateTabs(characterResponse, currentCharacterData);
       showFavoriteButton();
       switchTab("profile");
     } catch (error) {
       showError(error.message || "Erro ao buscar personagem. Verifique o ID e tente novamente.");
     } finally {
-      btnSearch.disabled = false;
-      btnSearch.textContent = "Buscar";
+      searchButton.disabled = false;
+      searchButton.textContent = "Buscar";
     }
   });
 }

@@ -1,13 +1,13 @@
 export function createAutocompleteItem(character, onSelect) {
-  const item = document.createElement("button");
-  item.type = "button";
-  item.classList.add("autocomplete-item");
-  item.textContent = character.name;
-  item.dataset.characterId = character.id;
+  const suggestionButton = document.createElement("button");
+  suggestionButton.type = "button";
+  suggestionButton.classList.add("autocomplete-item");
+  suggestionButton.textContent = character.name;
+  suggestionButton.dataset.characterId = character.id;
 
-  item.addEventListener("click", () => {
+  suggestionButton.addEventListener("click", () => {
     onSelect(character);
   });
 
-  return item;
+  return suggestionButton;
 }

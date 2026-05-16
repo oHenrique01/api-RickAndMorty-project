@@ -1,11 +1,11 @@
 import { createAutocompleteItem } from "./createAutocompleteItem.js";
 
-export function renderAutocomplete(characters, autocompleteList, input) {
-  autocompleteList.innerHTML = "";
+export function renderAutocomplete(characters, suggestionsList, searchInput) {
+  suggestionsList.innerHTML = "";
 
   if (!characters || characters.length === 0) {
-    autocompleteList.classList.remove("autocomplete-list-visible");
-    autocompleteList.closest(".hero")?.style.removeProperty("--autocomplete-space");
+    suggestionsList.classList.remove("autocomplete-list-visible");
+    suggestionsList.closest(".hero")?.style.removeProperty("--autocomplete-space");
     return;
   }
 
@@ -13,21 +13,21 @@ export function renderAutocomplete(characters, autocompleteList, input) {
   const visibleCharacters = characters.slice(0, 6);
 
   visibleCharacters.forEach((character) => {
-    const item = createAutocompleteItem(character, (selectedCharacter) => {
-      input.value = selectedCharacter.name;
-      autocompleteList.innerHTML = "";
-      autocompleteList.classList.remove("autocomplete-list-visible");
-      autocompleteList.closest(".hero")?.style.removeProperty("--autocomplete-space");
-      input.focus();
+    const suggestionItem = createAutocompleteItem(character, (selectedCharacter) => {
+      searchInput.value = selectedCharacter.name;
+      suggestionsList.innerHTML = "";
+      suggestionsList.classList.remove("autocomplete-list-visible");
+      suggestionsList.closest(".hero")?.style.removeProperty("--autocomplete-space");
+      searchInput.focus();
     });
 
-    fragment.appendChild(item);
+    fragment.appendChild(suggestionItem);
   });
 
-  autocompleteList
+  suggestionsList
     .closest(".hero")
     ?.style.setProperty("--autocomplete-space", `${visibleCharacters.length * 46}px`);
 
-  autocompleteList.appendChild(fragment);
-  autocompleteList.classList.add("autocomplete-list-visible");
+  suggestionsList.appendChild(fragment);
+  suggestionsList.classList.add("autocomplete-list-visible");
 }
