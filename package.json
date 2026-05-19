@@ -1,0 +1,21 @@
+{
+  "name": "api-rick-and-morty",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "npm run build:js && npm run build:html",
+    "build:js": "babel src --out-dir dist/src --extensions .js --source-maps --copy-files",
+    "build:html": "node scripts/copy-index.cjs"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.24.8",
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.4"
+  },
+  "browserslist": [
+    "> 0.5%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
